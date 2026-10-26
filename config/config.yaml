@@ -6,12 +6,13 @@
 # About #
 #########
 
-# File:     config/config.yaml
-# Author:   Marcel Schilling <mschilling@idibell.cat>
-# Created:  2026-10-26
-# License:  GNU All-Permissive License
-# Purpose:  Documented example config for the bulk RNA-seq genome mapping
-#           (STAR) Snakemake workflow.
+# File:      config/config.yaml
+# Author:    Marcel Schilling <mschilling@idibell.cat>
+# Created:   2026-10-26
+# Modified:  2026-10-26
+# License:   GNU All-Permissive License
+# Purpose:   Documented example config for the bulk RNA-seq genome mapping
+#            (STAR) Snakemake workflow.
 
 
 ###########
@@ -78,10 +79,9 @@ samples:
 ## Optional parameters.
 ## Uncomment all parent attributes of any parameter you want to specify.
 
-#params:
-# star:
-#   index:
-#     sjdb_overhang: 100
-#     extra_args: ""
-#   align:
-#     extra_args: ""
+#star:
+#  index:
+#    sjdb_overhang: 100
+#    extra_args: ""
+#  align:
+#    extra_args: ""
