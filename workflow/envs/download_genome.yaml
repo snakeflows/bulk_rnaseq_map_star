@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: © 2026 Marcel Schilling <mschilling@idibell.cat>
+# SPDX-License-Identifier: FSFAP
+
+
+#########
+# About #
+#########
+
+# File:     workflow/envs/download_genome.yaml
+# Author:   Marcel Schilling <mschilling@idibell.cat>
+# Created:  2026-10-26
+# License:  GNU All-Permissive License
+# Purpose:  Genome downloading conda environment YAML file for the bulk
+#           RNA-seq genome mapping (STAR) Snakemake workflow.
+
+
+###############
+# Description #
+###############
+
+# Genome downloading conda environment YAML file for bulk RNA-seq genome
+# mapping (STAR) Snakemake workflow.
+
+
+###########
+# License #
+###########
+
+# Genome downloading conda environment YAML file for bulk RNA-seq genome
+# mapping (STAR) Snakemake workflow.
+# Copyright (C) 2026  Marcel Schilling
+#
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved.  This file is offered as-is,
+# without any warranty.
+
+
+############
+# Channels #
+############
+
+channels:
+  - conda-forge
+  - nodefaults
+
+
+############
+# Packages #
+############
+
+dependencies:
+  - curl

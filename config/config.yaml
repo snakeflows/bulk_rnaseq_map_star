@@ -1,0 +1,87 @@
+# SPDX-FileCopyrightText: © 2026 Marcel Schilling <mschilling@idibell.cat>
+# SPDX-License-Identifier: FSFAP
+
+
+#########
+# About #
+#########
+
+# File:     config/config.yaml
+# Author:   Marcel Schilling <mschilling@idibell.cat>
+# Created:  2026-10-26
+# License:  GNU All-Permissive License
+# Purpose:  Documented example config for the bulk RNA-seq genome mapping
+#           (STAR) Snakemake workflow.
+
+
+###########
+# License #
+###########
+
+# Example config YAML file for bulk RNA-seq genome mapping (STAR)
+# Snakemake workflow.
+# Copyright (C) 2026  Marcel Schilling
+
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved.  This file is offered as-is,
+# without any warranty.
+
+
+###########
+# Preface #
+###########
+
+
+# This file contains an example for the general configuration of the Snakemake
+# workflow to map bulk RNA-seq reads to the genome using STAR.
+# It will be validated by Snakemake against the schema provided in
+# `workflow/schemas/config.schema.yaml`.
+
+
+##################
+# Example config #
+##################
+
+# The following parameters are required.
+# Please make sure to adjust them to your project before running the workflow.
+
+reads_dir: resources/reads
+
+fastq_extension: fastq.gz
+
+genome:
+  name: GRCh38
+  fasta_url: https://ftp.ensembl.org/pub/release-116/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+
+transcriptome:
+  name: GRCh38.ensembl_v116
+  gtf_url: https://ftp.ensembl.org/pub/release-116/gtf/homo_sapiens/Homo_sapiens.GRCh38.116.gtf.gz
+
+samples:
+  dir1:
+    sample_id1: sample1
+    sample_id2: sample2
+  dir2:
+    sample_id3: sample3
+
+
+#######################
+# Optional parameters #
+#######################
+
+# The following config options are supported but don't have to be set for the
+# configuration to be valid.
+
+# The values listed here are the corresponding default values.
+
+## Optional parameters.
+## Uncomment all parent attributes of any parameter you want to specify.
+
+#params:
+# star:
+#   index:
+#     sjdb_overhang: 100
+#     extra_args: ""
+#   align:
+#     extra_args: ""

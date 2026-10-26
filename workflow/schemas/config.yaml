@@ -1,0 +1,146 @@
+# SPDX-FileCopyrightText: © 2026 Marcel Schilling <mschilling@ub.edu>
+# SPDX-License-Identifier: FSFAP
+
+
+#########
+# About #
+#########
+
+# File:     workflow/schemas/config.schema.yaml
+# Author:   Marcel Schilling <mschilling@idibell.cat>
+# Created:  2026-01-26
+# License:  GNU All-Permissive License
+# Purpose:  Define valid configs for the bulk RNA-seq genome mapping (STAR)
+#           Snakemake workflow.
+
+
+###########
+# License #
+###########
+
+# Config JSON Schema YAML file for bulk RNA-seq genome mapping (STAR)
+# Snakemake workflow.
+# Copyright (C) 2026  Marcel Schilling
+
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved.  This file is offered as-is,
+# without any warranty.
+
+
+###################
+# Schema keywords #
+###################
+
+# Use latest (as of file creation) standard.
+$schema: https://json-schema.org/draft/2020-12/schema
+
+
+######################
+# Schema annotations #
+######################
+
+title: Bulk RNA-seq genome mapping (STAR) Snakemake workflow config
+description: Configuration of the STAR genome mapping workflow.
+
+
+#######################
+# Validation keywords #
+#######################
+
+type: object
+
+properties:
+  reads_dir:
+    type: string
+    minLength: 1
+    description: >-
+      Directory containing one subdirectory (batch) per sequencing run.
+  fastq_extension:
+    type: string
+    pattern: "^[^.].*$"
+    description: >-
+      FASTQ file extension without leading dot, e.g. fastq.gz. Reads are
+      expected at {reads_dir}/{batch}/{sample}_{mate}.{fastq_extension}.
+      Gzipped reads (extension ending in .gz) are decompressed by STAR.
+
+  genome:
+    type: object
+    properties:
+      name:
+        type: string
+        pattern: "^[A-Za-z0-9._-]+$"
+      fasta_url:
+        type: string
+        minLength: 1
+    required: [name, fasta_url]
+    additionalProperties: false
+
+  transcriptome:
+    type: object
+    properties:
+      name:
+        type: string
+        pattern: "^[A-Za-z0-9._-]+$"
+      gtf_url:
+        type: string
+        minLength: 1
+    required: [name, gtf_url]
+    additionalProperties: false
+
+  samples:
+    type: object
+    minProperties: 1
+    description: >-
+      Sample-ID-to-sample mappings, keyed by batch (subdirectory) name. The
+      FASTQ files are found by sample ID; output files are named by sample,
+      so sample names must be unique across all batches. Quote sample names
+      that YAML would otherwise read as numbers.
+    additionalProperties:
+      type: object
+      minProperties: 1
+      propertyNames:
+        pattern: "^[A-Za-z0-9._-]+$"
+      additionalProperties:
+        type: string
+        pattern: "^[A-Za-z0-9._-]+$"
+
+  star:
+    type: object
+    default: {}
+    properties:
+      index:
+        type: object
+        default: {}
+        properties:
+          sjdb_overhang:
+            type: integer
+            minimum: 1
+            default: 100
+            description: >-
+              Read length minus 1. The default of 100 works well for most
+              read lengths.
+          extra_args:
+            type: string
+            default: ""
+            description: >-
+              Additional arguments for `STAR --runMode genomeGenerate`, e.g.
+              --genomeSAindexNbases for small genomes.
+        additionalProperties: false
+      align:
+        type: object
+        default: {}
+        properties:
+          extra_args:
+            type: string
+            default: ""
+            description: Additional arguments for STAR read alignment.
+        additionalProperties: false
+    additionalProperties: false
+
+required:
+  - reads_dir
+  - fastq_extension
+  - genome
+  - transcriptome
+  - samples
