@@ -6,12 +6,13 @@
 # About #
 #########
 
-# File:     workflow/Snakefile
-# Author:   Marcel Schilling <mschilling@idibell.cat>
-# Created:  2026-10-26
-# License:  GNU Affero General Public License version 3 or later
-# Purpose:  Main Snakefile for the bulk RNA-seq genome mapping (STAR)
-#           Snakemake workflow.
+# File:      workflow/Snakefile
+# Author:    Marcel Schilling <mschilling@idibell.cat>
+# Created:   2026-10-26
+# Modified:  2026-10-27
+# License:   GNU Affero General Public License version 3 or later
+# Purpose:   Main Snakefile for the bulk RNA-seq genome mapping (STAR)
+#            Snakemake workflow.
 
 
 ###########
@@ -141,61 +142,58 @@ wildcard_constraints:
 #########
 
 rule download_genome:
-  """Download the genome FASTA."""
-  output: genome_fasta = "resources/references/genome/{genome}.fasta.gz"
-  params: url = config["genome"]["fasta_url"]
+  """Download a reference file as a bgzipped file (for tabix/faidx).
+  The stream is optionally transformed (see `params.transform`) and
+  recompressed on the fly, so the plain-gzip download never touches the disk.
+  """
+  output: archive = "resources/references/genome/{genome}.fasta.gz"
+  params:
+    url = config["genome"]["fasta_url"],
+    # Command applied to the decompressed stream. `cat` leaves it unchanged.
+    transform = "cat",
+    # Nothing else is busy, so `bgzip` can use all threads.
+    bgzip_threads = lambda wildcards, threads: threads
   log: "results/logs/genome_downloading/{genome}.log"
   conda: "envs/download_genome.yaml"
-  threads: 1
-  resources:
-    mem_mb = 512,
-    runtime = 30
-  shell:
-    """
-    curl --fail --silent --show-error --location \
-      '{params.url}' --output '{output.genome_fasta}' \
-      > '{log}' 2>&1
-    """
-
-
-rule download_transcriptome:
-  """Download the transcriptome GTF as a coordinate-sorted, bgzipped file.
-
-  The stream is sorted and recompressed on the fly (for tabix/VEP/STAR), so
-  the unsorted, non-bgzipped annotation never touches the disk.
-  """
-  output:
-    sorted_transcriptome_gtf =
-      "resources/references/transcriptome/{transcriptome}.sorted.gtf.gz",
-  params: url = config["transcriptome"]["gtf_url"]
-  log: "results/logs/transcriptome_downloading/{transcriptome}.log"
-  conda: "envs/download_transcriptome.yaml"
-  # Half of the threads for `sort` and half for `bgzip`, since both can be
-  # busy at the same time while the sorted stream is being compressed.
+  # Adjust params to ensure proper accounting for the the transform (e.g.
+  # `sort`) and `bgzip`, since both can be busy at the same time while the
+  # stream is compressed.
   # Must be 2 at minimum due to piping.
   threads: 8
   resources:
     mem_mb = 2000,
-    runtime = 30
+    runtime = 60
   shell:
     """
     exec 2> '{log}'
-    # Half of the threads for `sort` and half for `bgzip`.
-    half_threads=$(( {threads} / 2 ))
-    # Comment lines are dropped because sort would scramble them and tabix
-    # would choke on them.
     curl --fail --silent --show-error --location '{params.url}' \
       | gzip --decompress --stdout \
-      | grep --invert-match '^#' \
-      | LC_ALL=C sort --parallel=$half_threads -S 1G -k1,1 -k4,4n -k5,5n \
-      | bgzip --threads $half_threads --compress-level 9 --stdout \
-      > '{output.sorted_transcriptome_gtf}'
+      | {params.transform} \
+      | bgzip --threads {params.bgzip_threads} --compress-level 9 --stdout \
+      > '{output.archive}'
     """
+
+
+# Same as `download_genome`, but the GTF is also coordinate-sorted (for
+# tabix/VEP/STAR). Comment lines are dropped because sort would scramble them
+# and tabix would choke on them.
+use rule download_genome as download_transcriptome with:
+  output:
+    archive =
+      "resources/references/transcriptome/{transcriptome}.sorted.gtf.gz",
+  params:
+    url = config["transcriptome"]["gtf_url"],
+    transform = lambda wildcards, threads: (
+      "grep --invert-match '^#' "
+      f"| LC_ALL=C sort --parallel={threads // 2} -S 1G -k1,1 -k4,4n -k5,5n"
+    ),
+    bgzip_threads = lambda wildcards, threads: threads // 2,
+  log: "results/logs/transcriptome_downloading/{transcriptome}.log"
 
 
 rule decompress_genome:
   """Decompress a gzipped reference file (temporary, as required by STAR)."""
-  input: archive = rules.download_genome.output.genome_fasta
+  input: archive = rules.download_genome.output.archive
   output: reference = temp("resources/references/genome/{genome}.fasta")
   log: "results/logs/genome_decompression/{genome}.log"
   conda: "envs/decompress_genome.yaml"
@@ -213,7 +211,7 @@ rule decompress_genome:
 
 # Reuses the shell command, env and resources of `decompress_genome`.
 use rule decompress_genome as decompress_transcriptome with:
-  input: archive = rules.download_transcriptome.output.sorted_transcriptome_gtf
+  input: archive = rules.download_transcriptome.output.archive
   output:
     reference = temp("resources/references/transcriptome/{transcriptome}.gtf")
   log: "results/logs/transcriptome_decompression/{transcriptome}.log"

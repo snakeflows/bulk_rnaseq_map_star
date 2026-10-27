@@ -6,12 +6,13 @@
 # About #
 #########
 
-# File:     workflow/envs/download_transcriptome.yaml
-# Author:   Marcel Schilling <mschilling@idibell.cat>
-# Created:  2026-10-26
-# License:  GNU All-Permissive License
-# Purpose:  Transcriptome downloading conda environment YAML file for the
-#           bulk RNA-seq genome mapping (STAR) Snakemake workflow.
+# File:      workflow/envs/download_transcriptome.yaml
+# Author:    Marcel Schilling <mschilling@idibell.cat>
+# Created:   2026-10-26
+# Modified:  2026-10-27
+# License:   GNU All-Permissive License
+# Purpose:   Transcriptome downloading conda environment YAML file for the
+#            bulk RNA-seq genome mapping (STAR) Snakemake workflow.
 
 
 ###############
@@ -53,6 +54,6 @@ channels:
 dependencies:
   - curl
   - gzip
+  - htslib
   - grep
   - coreutils
-  - htslib
