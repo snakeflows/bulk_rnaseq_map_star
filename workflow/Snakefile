@@ -336,3 +336,8 @@ rule all:
     bais = expand(
       rules.index_bam.output.bai, sample=SAMPLE_FASTQS, index=INDEX_NAME
     )
+  # Used to pass values computed here to workflows using this workflow as a
+  # module via `rules.<module_prefix>all.params`
+  params:
+    index_name = INDEX_NAME,
+    sample_fastqs = SAMPLE_FASTQS,
