@@ -8,12 +8,13 @@ SPDX-License-Identifier: FSFAP
 [#]: # ( About )
 [#]: # (#######)
 
-[#]: # (File:    README.md)
-[#]: # (Author:  Marcel Schilling <mschilling@idibell.cat>)
-[#]: # (Created: 2026-10-26)
-[#]: # (License: GNU All-Permissive License)
-[#]: # (Purpose: README Markdown file for the bulk RNA-seq genome mapping
-[#]: #           \(STAR\) Snakemake workflow.)
+[#]: # (File:     README.md)
+[#]: # (Author:   Marcel Schilling <mschilling@idibell.cat>)
+[#]: # (Created:  2026-10-26)
+[#]: # (Modified: 2026-11-02)
+[#]: # (License:  GNU All-Permissive License)
+[#]: # (Purpose:  README Markdown file for the bulk RNA-seq genome mapping)
+[#]: #            \(STAR\) Snakemake workflow.)
 
 
 [#]: # (#########)
@@ -34,10 +35,10 @@ SPDX-License-Identifier: FSFAP
 [#]: # ( README )
 [#]: # (########)
 
-# Bulk RNA-seq genome mapping \(STAR\) Snakemake workflow.
+# Bulk RNA-seq genome mapping (STAR) Snakemake workflow.
 
 A [Snakemake][snakemake] [workflow][snakemake-workflow-catalog] to map
-bulkRNA-seq reads to a genome using [STAR][star].
+bulk RNA-seq reads to a genome using [STAR][star].
 
 **Note: This workflow is currently under development**.
 
@@ -83,7 +84,7 @@ Catalog][snakemake-workflow-catalog].**
 In short:
 
 1. Adjust [the `config.yaml` file in the `config`
-   directory](config/config.yaml) to your needs 
+   directory](config/config.yaml) to your needs
    \[**TODO:** documentation still missing\].
 2. Run `snakemake` from the workflow's root directory.
 
@@ -159,7 +160,7 @@ repository][workflow-repo] in the meantime.
 
 [snakemake]: https://snakemake.github.io "Snakemake home page"
 [snakemake-workflow-catalog]: https://snakemake.github.io/snakemake-workflow-catalog/ "Snakemake Workflow Catalog"
-[star]: http://alexdobin.github.io/STAR/ "STAR on GitHub Pages"
+[star]: https://alexdobin.github.io/STAR/ "STAR on GitHub Pages"
 [workflow-usage-in-snakemake-workflow-catalog]: https://snakemake.github.io/snakemake-workflow-catalog/docs/workflows/snakeflows%20bulk_rnaseq_map_star "Workflow usage documentation in the Snakemake Workflow Catalog"
 [snakemake-cores]: https://snakemake.readthedocs.io/en/stable/executing/cli.html#useful-command-line-arguments "Snakemake --cores parameter documentation"
 [snakemake-profile]: https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles "Snakemake --profile parameter documentation"

@@ -6,12 +6,13 @@
 # About #
 #########
 
-# File:     workflow/schemas/config.schema.yaml
-# Author:   Marcel Schilling <mschilling@idibell.cat>
-# Created:  2026-01-26
-# License:  GNU All-Permissive License
-# Purpose:  Define valid configs for the bulk RNA-seq genome mapping (STAR)
-#           Snakemake workflow.
+# File:      workflow/schemas/config.schema.yaml
+# Author:    Marcel Schilling <mschilling@idibell.cat>
+# Created:   2026-10-26
+# Modified:  2026-11-02
+# License:   GNU All-Permissive License
+# Purpose:   Define valid configs for the bulk RNA-seq genome mapping
+#            (STAR) Snakemake workflow.
 
 
 ###########
