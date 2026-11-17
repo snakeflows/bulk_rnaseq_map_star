@@ -9,7 +9,7 @@
 # File:      workflow/Snakefile
 # Author:    Marcel Schilling <mschilling@idibell.cat>
 # Created:   2026-10-26
-# Modified:  2026-10-27
+# Modified:  2026-11-17
 # License:   GNU Affero General Public License version 3 or later
 # Purpose:   Main Snakefile for the bulk RNA-seq genome mapping (STAR)
 #            Snakemake workflow.
@@ -243,6 +243,10 @@ rule index_genome:
     # mktemp (which respects TMPDIR). STAR requires --outTmpDir to not exist.
     tmp_dir=$(mktemp -d)
     trap 'rm -rf "$tmp_dir"' EXIT
+    # Snakemake auto-creates parent directories of output files, but not
+    # outputs marked as directories themselves. STAR requires the genomeDir
+    # to exist.
+    mkdir --parent '{output.index}'
     STAR \
       --runMode genomeGenerate \
       --runThreadN {threads} \
